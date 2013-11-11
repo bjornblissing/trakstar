@@ -46,7 +46,7 @@ int TrakStar::initialize()
 	}
 
 	// Get number of sensors and try to get sensor information
-	m_numberOfSensors = unsigned short(m_system.numberSensors);
+	m_numberOfSensors = static_cast<unsigned short>(m_system.numberSensors);
 	m_sensor = new SENSOR_CONFIGURATION[m_numberOfSensors];
 
 	for (USHORT i = 0; i < m_system.numberSensors; ++i)	{
@@ -59,7 +59,7 @@ int TrakStar::initialize()
 	}
 
 	// Get transmitter configuration
-	m_numberOfTransmitters = unsigned short(m_system.numberTransmitters);
+	m_numberOfTransmitters = static_cast<unsigned short>(m_system.numberTransmitters);
 	m_transmitter = new TRANSMITTER_CONFIGURATION[m_numberOfTransmitters];
 
 	for (USHORT i = 0; i < m_system.numberTransmitters; ++i) {
@@ -98,7 +98,6 @@ void TrakStar::getPosition(unsigned short sensorId, double& x, double& y, double
 	int errorCode = GetAsynchronousRecord(sensorId, &record, sizeof(record));
 
 	if (errorCode != BIRD_ERROR_SUCCESS) {
-		std::cout << "Sensor error" << std::endl;
 		x = 0;
 		y = 0;
 		z = 0;
