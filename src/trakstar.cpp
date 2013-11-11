@@ -8,7 +8,7 @@
 #include "trakstar.h"
 #include <iostream>
 
-TrakStar::TrakStar() : m_sensor(0), m_transmitter(0), m_initialized(false)
+TrakStar::TrakStar() : m_sensor(0), m_transmitter(0), m_initialized(false), m_numberOfSensors(0), m_numberOfTransmitters(0)
 {
 	initialize();
 }
