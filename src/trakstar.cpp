@@ -58,6 +58,23 @@ int TrakStar::initialize()
 		}
 	}
 
+	// Set system settings
+	double pl = 50.0; // 50 Hz power line
+	errorCode = SetSystemParameter(POWER_LINE_FREQUENCY, &pl, sizeof(pl));
+	if(errorCode != BIRD_ERROR_SUCCESS)
+	{
+		std::cerr << "Error: Unable to get set system configuration: Power Line." << std::endl;
+		return errorCode;
+	}
+
+	BOOL metric = true; // metric reporting enabled
+	errorCode = SetSystemParameter(METRIC, &metric, sizeof(metric));
+	if(errorCode != BIRD_ERROR_SUCCESS)
+	{
+		std::cerr << "Error: Unable to get set system configuration: Metric mode." << std::endl;
+		return errorCode;
+	}
+	
 	// Get transmitter configuration
 	m_numberOfTransmitters = static_cast<unsigned short>(m_system.numberTransmitters);
 	m_transmitter = new TRANSMITTER_CONFIGURATION[m_numberOfTransmitters];
