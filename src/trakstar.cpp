@@ -61,20 +61,20 @@ int TrakStar::initialize()
 	// Set system settings
 	double pl = 50.0; // 50 Hz power line
 	errorCode = SetSystemParameter(POWER_LINE_FREQUENCY, &pl, sizeof(pl));
-	if(errorCode != BIRD_ERROR_SUCCESS)
-	{
+
+	if (errorCode != BIRD_ERROR_SUCCESS) {
 		std::cerr << "Error: Unable to get set system configuration: Power Line." << std::endl;
 		return errorCode;
 	}
 
 	BOOL metric = true; // metric reporting enabled
 	errorCode = SetSystemParameter(METRIC, &metric, sizeof(metric));
-	if(errorCode != BIRD_ERROR_SUCCESS)
-	{
+
+	if (errorCode != BIRD_ERROR_SUCCESS) {
 		std::cerr << "Error: Unable to get set system configuration: Metric mode." << std::endl;
 		return errorCode;
 	}
-	
+
 	// Get transmitter configuration
 	m_numberOfTransmitters = static_cast<unsigned short>(m_system.numberTransmitters);
 	m_transmitter = new TRANSMITTER_CONFIGURATION[m_numberOfTransmitters];
@@ -115,9 +115,9 @@ void TrakStar::getPosition(unsigned short sensorId, double& x, double& y, double
 	int errorCode = GetAsynchronousRecord(sensorId, &record, sizeof(record));
 
 	if (errorCode != BIRD_ERROR_SUCCESS) {
-		x = 0;
-		y = 0;
-		z = 0;
+		x = 0.0;
+		y = 0.0;
+		z = 0.0;
 	} else {
 		x = record.x;
 		y = record.y;
@@ -131,12 +131,70 @@ void TrakStar::getOrientation(unsigned short sensorId, double& azimuth, double& 
 	int errorCode = GetAsynchronousRecord(sensorId, &record, sizeof(record));
 
 	if (errorCode != BIRD_ERROR_SUCCESS) {
-		azimuth = 0;
-		elevation = 0;
-		roll = 0;
+		azimuth = 0.0;
+		elevation = 0.0;
+		roll = 0.0;
 	} else {
 		azimuth = record.a;
 		elevation = record.e;
 		roll = record.r;
+	}
+}
+
+void TrakStar::getPositionAndOrientation(unsigned short sensorId, double& x, double& y, double& z, double& azimuth, double& elevation, double& roll)
+{
+	DOUBLE_POSITION_ANGLES_RECORD record;
+	int errorCode = GetAsynchronousRecord(sensorId, &record, sizeof(record));
+
+	if (errorCode != BIRD_ERROR_SUCCESS) {
+		x = 0.0;
+		y = 0.0;
+		z = 0.0;
+		azimuth = 0.0;
+		elevation = 0.0;
+		roll = 0.0;
+	} else {
+		x = record.x;
+		y = record.y;
+		z = record.z;
+		azimuth = record.a;
+		elevation = record.e;
+		roll = record.r;
+	}
+}
+
+void TrakStar::getPositionOrientationTime(unsigned short sensorId, double& x, double& y, double& z, double& azimuth, double& elevation, double& roll, double& time)
+{
+	DOUBLE_POSITION_ANGLES_TIME_STAMP_RECORD record;
+	int errorCode = GetAsynchronousRecord(sensorId, &record, sizeof(record));
+
+	if (errorCode != BIRD_ERROR_SUCCESS) {
+		x = 0.0;
+		y = 0.0;
+		z = 0.0;
+		azimuth = 0.0;
+		elevation = 0.0;
+		roll = 0.0;
+		time = 0.0;
+	} else {
+		x = record.x;
+		y = record.y;
+		z = record.z;
+		azimuth = record.a;
+		elevation = record.e;
+		roll = record.r;
+		time = record.time;
+	}
+}
+
+void TrakStar::getMeasurementRate(int& measurementRate)
+{
+	SYSTEM_CONFIGURATION systemConfiguration;
+	int errorCode = GetBIRDSystemConfiguration(&systemConfiguration);
+
+	if (errorCode != BIRD_ERROR_SUCCESS) {
+		measurementRate = 0;
+	} else {
+		measurementRate = static_cast<int>(systemConfiguration.measurementRate);
 	}
 }

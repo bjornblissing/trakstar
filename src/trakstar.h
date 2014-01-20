@@ -18,6 +18,9 @@ class TrakStar {
 
 		void getPosition(unsigned short sensorId, double& x, double& y, double& z);
 		void getOrientation(unsigned short sensorId, double& azimuth, double& elevation, double& roll);
+		void getPositionAndOrientation(unsigned short sensorId, double& x, double& y, double& z, double& azimuth, double& elevation, double& roll);
+		void getPositionOrientationTime(unsigned short sensorId, double& x, double& y, double& z, double& azimuth, double& elevation, double& roll, double& time);
+		void getMeasurementRate(int& measurementRate);
 		unsigned short numberOfSensors() const { return m_numberOfSensors; }
 		unsigned short numberOfTransmitters() const { return m_numberOfTransmitters; }
 	protected:
